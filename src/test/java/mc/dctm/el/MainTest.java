@@ -49,17 +49,15 @@ public class MainTest {
     public void testRun() throws DfException {
         String objId = "09000539800aacc9";
 
-        String input = "";
+        String input = "this.r_creation_date";
 
         try {
             IDfSysObject sysObj = (IDfSysObject) session.getObject(new DfId(objId));
             ContextObject ctxObj = new SysObjectContextObject(sysObj);
 
-            input = "this.r_creation_date";
             System.out.println(DctmExpressionEvaluator.evaluate(input, ctxObj, session));
 
             if (sysObj.isDirty()) {
-                sysObj.setBoolean("ecs_bypass_tbo", true);
                 sysObj.save();
             }
 
