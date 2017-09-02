@@ -1,12 +1,11 @@
 package mc.dctm.el.identifier.context;
 
 import com.documentum.fc.client.IDfSysObject;
-import com.documentum.fc.common.DfException;
-import com.documentum.fc.common.DfValue;
-import com.documentum.fc.common.IDfAttr;
-import com.documentum.fc.common.IDfValue;
+import com.documentum.fc.common.*;
 import mc.dctm.el.util.DctmElProperties;
 import mc.sel.identifier.context.ContextObject;
+
+import java.util.Date;
 
 /**
  * Context object wrapper for {@link IDfSysObject} objects.
@@ -64,7 +63,7 @@ public class SysObjectContextObject implements ContextObject {
         try {
             String attr = replaceAspectAttrSep(s);
             int attrDataType = sysObject.getAttrDataType(s);
-            sysObject.setValue(attr, new DfValue(o, attrDataType));
+            sysObject.setValue(attr, toDfValue(o, attrDataType));
         } catch (DfException e) {
             throw new RuntimeException(e);
         }
@@ -75,9 +74,18 @@ public class SysObjectContextObject implements ContextObject {
         try {
             String attr = replaceAspectAttrSep(s);
             int attrDataType = sysObject.getAttrDataType(s);
-            sysObject.setRepeatingValue(attr, i, new DfValue(o, attrDataType));
+            sysObject.setRepeatingValue(attr, i, toDfValue(o, attrDataType));
         } catch (DfException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private IDfValue toDfValue(Object val, int dataType) {
+        switch (dataType) {
+            case IDfAttr.DM_TIME:
+                return new DfValue(new DfTime((Date) val));
+            default:
+                return val == null ? new DfValue((Object)null, dataType) : new DfValue(String.valueOf(val), dataType);
         }
     }
 
