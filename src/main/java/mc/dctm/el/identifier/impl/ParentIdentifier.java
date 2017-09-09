@@ -6,7 +6,7 @@ import com.documentum.fc.common.DfException;
 import com.documentum.fc.common.DfId;
 import mc.dctm.el.identifier.DctmObjectIdentifier;
 import mc.dctm.el.identifier.context.DctmContext;
-import mc.dctm.el.identifier.context.SysObjectContextObject;
+import mc.dctm.el.identifier.context.TypedObjectContextObject;
 import mc.sel.identifier.context.ContextObject;
 
 /**
@@ -26,7 +26,7 @@ public class ParentIdentifier extends DctmObjectIdentifier {
 
         try {
             IDfSysObject parentSysObj = (IDfSysObject) session.getObject(new DfId(parentId));
-            return new SysObjectContextObject(parentSysObj);
+            return new TypedObjectContextObject(parentSysObj);
         } catch (DfException e) {
             throw new RuntimeException(e);
         }

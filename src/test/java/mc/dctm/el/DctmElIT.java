@@ -10,9 +10,9 @@ import com.documentum.fc.common.DfException;
 import com.documentum.fc.common.DfLoginInfo;
 import com.documentum.fc.common.DfTime;
 import mc.dctm.el.eval.DctmExpressionEvaluator;
-import mc.dctm.el.identifier.context.SysObjectContextObject;
+import mc.dctm.el.identifier.context.TypedObjectContextObject;
 import mc.dctm.el.identifier.impl.ParentIdentifier;
-import mc.sel.identifier.ObjectsRegistry;
+import mc.sel.identifier.ObjectIdentifiersRegistry;
 import mc.sel.identifier.context.ContextObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,7 +42,7 @@ public class DctmElIT {
         sessionManager = createSessionManager(repository, username, password);
         session = sessionManager.getSession(repository);
 
-        ObjectsRegistry.registerObjectIdentifier("parent", new ParentIdentifier());
+        ObjectIdentifiersRegistry.registerObjectIdentifier("parent", new ParentIdentifier());
 
         sysObject = (IDfSysObject) session.newObject("dm_document");
         sysObject.link("/Temp");
@@ -158,8 +158,23 @@ public class DctmElIT {
         assertEquals("Test 3", sysObject.getRepeatingString("dm_smart_object.member_logical_name", 2));
     }
 
+    @Test
+    public void testParentIdentifier() throws DfException {
+        String expr = "parent.r_folder_path";
+        Object result = executeExpression(expr);
+        assertEquals("/Temp", result);
+
+        expr = "parent.parent.r_folder_path";
+        try {
+            executeExpression(expr);
+            fail("Should have failed");
+        } catch (RuntimeException e) {
+            // expected
+        }
+    }
+
     private Object executeExpression(String expr) throws DfException {
-        ContextObject ctxObj = new SysObjectContextObject(sysObject);
+        ContextObject ctxObj = new TypedObjectContextObject(sysObject);
         Object result = DctmExpressionEvaluator.evaluate(expr, ctxObj, session);
 
         if (sysObject.isDirty()) {

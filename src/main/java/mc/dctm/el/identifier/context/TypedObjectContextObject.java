@@ -1,6 +1,7 @@
 package mc.dctm.el.identifier.context;
 
 import com.documentum.fc.client.IDfSysObject;
+import com.documentum.fc.client.IDfTypedObject;
 import com.documentum.fc.common.*;
 import mc.dctm.el.util.DctmElProperties;
 import mc.sel.identifier.context.ContextObject;
@@ -12,12 +13,12 @@ import java.util.Date;
  *
  * @author Milan Crnjak
  */
-public class SysObjectContextObject implements ContextObject {
+public class TypedObjectContextObject implements ContextObject {
 
-    private IDfSysObject sysObject;
+    private IDfTypedObject typedObject;
 
-    public SysObjectContextObject(IDfSysObject sysObject) {
-        this.sysObject = sysObject;
+    public TypedObjectContextObject(IDfTypedObject typedObject) {
+        this.typedObject = typedObject;
     }
 
     @Override
@@ -25,8 +26,8 @@ public class SysObjectContextObject implements ContextObject {
         String attr = replaceAspectAttrSep(s);
 
         try {
-            IDfValue dfValue = sysObject.getValue(attr);
-            return extractValue(dfValue, sysObject.getAttrDataType(attr));
+            IDfValue dfValue = typedObject.getValue(attr);
+            return extractValue(dfValue, typedObject.getAttrDataType(attr));
         } catch (DfException e) {
             throw new RuntimeException(e);
         }
@@ -36,8 +37,8 @@ public class SysObjectContextObject implements ContextObject {
     public Object getPropertyAtIndex(String s, int i) {
         try {
             String attr = replaceAspectAttrSep(s);
-            IDfValue dfValue = sysObject.getRepeatingValue(attr, i);
-            return extractValue(dfValue, sysObject.getAttrDataType(attr));
+            IDfValue dfValue = typedObject.getRepeatingValue(attr, i);
+            return extractValue(dfValue, typedObject.getAttrDataType(attr));
         } catch (DfException e) {
             throw new RuntimeException(e);
         }
@@ -62,8 +63,8 @@ public class SysObjectContextObject implements ContextObject {
     public void setProperty(String s, Object o) {
         try {
             String attr = replaceAspectAttrSep(s);
-            int attrDataType = sysObject.getAttrDataType(attr);
-            sysObject.setValue(attr, toDfValue(o, attrDataType));
+            int attrDataType = typedObject.getAttrDataType(attr);
+            typedObject.setValue(attr, toDfValue(o, attrDataType));
         } catch (DfException e) {
             throw new RuntimeException(e);
         }
@@ -73,8 +74,8 @@ public class SysObjectContextObject implements ContextObject {
     public void setPropertyAtIndex(String s, Object o, int i) {
         try {
             String attr = replaceAspectAttrSep(s);
-            int attrDataType = sysObject.getAttrDataType(attr);
-            sysObject.setRepeatingValue(attr, i, toDfValue(o, attrDataType));
+            int attrDataType = typedObject.getAttrDataType(attr);
+            typedObject.setRepeatingValue(attr, i, toDfValue(o, attrDataType));
         } catch (DfException e) {
             throw new RuntimeException(e);
         }
@@ -91,7 +92,7 @@ public class SysObjectContextObject implements ContextObject {
 
     @Override
     public Object getObject() {
-        return sysObject;
+        return typedObject;
     }
 
     private String replaceAspectAttrSep(String s) {

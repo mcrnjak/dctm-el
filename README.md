@@ -10,7 +10,7 @@ public void dctmElDemo(String objId, IDfSession session) throws DfException {
 
     try {
         IDfSysObject sysObj = (IDfSysObject) session.getObject(new DfId(objId));
-        ContextObject ctxObj = new SysObjectContextObject(sysObj);
+        ContextObject ctxObj = new TypedObjectContextObject(sysObj);
 
         Object result = DctmExpressionEvaluator.evaluate(input, ctxObj, session);
 
