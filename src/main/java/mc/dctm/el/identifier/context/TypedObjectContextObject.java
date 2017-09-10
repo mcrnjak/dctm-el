@@ -1,6 +1,5 @@
 package mc.dctm.el.identifier.context;
 
-import com.documentum.fc.client.IDfSysObject;
 import com.documentum.fc.client.IDfTypedObject;
 import com.documentum.fc.common.*;
 import mc.dctm.el.util.DctmElProperties;
@@ -9,7 +8,7 @@ import mc.sel.identifier.context.ContextObject;
 import java.util.Date;
 
 /**
- * Context object wrapper for {@link IDfSysObject} objects.
+ * Context object wrapper for {@link IDfTypedObject} objects.
  *
  * @author Milan Crnjak
  */
